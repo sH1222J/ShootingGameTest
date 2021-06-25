@@ -12,6 +12,9 @@ public class Player_Fire : MonoBehaviour
     private MemoryPool MPool;           // 메모리 풀
     private GameObject[] MissileArray;  // 메모리 풀과 연동하여 사용할 미사일 배열
 
+    private float posX = 0f;            // 미사일 시작 위치
+    private bool isEndPoint = false;    // 미사일이 끝 지점에 도달했는지 확인
+
     // 게임이 종료되면 자동으로 호출되는 함수
     private void OnApplicationQuit()
     {
@@ -56,11 +59,28 @@ public class Player_Fire : MonoBehaviour
                     // 메모리풀에서 미사일을 가져온다.
                     MissileArray[i] = MPool.NewItem();
 
-                    Vector2 vector = Vector2.zero;
-                    vector.x = Random.Range(-9.5f, 9.5f);
-                    vector.y = 6f;
+                    // 무작위로 미사일 발사하기
+                    //Vector2 vector = Vector2.zero;
+                    //vector.x = Random.Range(-2f, 2f);
+                    //vector.y = 5f;
+                    //MissileLocation.transform.position = vector;
 
+                    // 지그재그로 미사일 발사하기
+                    Vector2 vector = Vector2.zero;                 
+                    if (posX < 2f && isEndPoint == false)
+                        posX += 0.1f;
+                    else
+                        isEndPoint = true;
+
+                    if (isEndPoint == true)
+                        posX -= 0.1f;
+
+                    if (posX < -2f)
+                        isEndPoint = false;
+                    vector.x = posX;
+                    vector.y = 5f;
                     MissileLocation.transform.position = vector;
+
 
                     // 해당 미사일의 위치를 미사일발사지점으로 맞춘다.
                     MissileArray[i].transform.position = MissileLocation.transform.position;
